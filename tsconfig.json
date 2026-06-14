@@ -14,5 +14,11 @@
 		"types": [
 			"./worker-configuration.d.ts"
 		]
-	}
+	},
+	"exclude": [
+		"node_modules",
+		".svelte-kit/output",
+		".svelte-kit/cloudflare",
+		".svelte-kit/cloudflare-tmp"
+	]
 }

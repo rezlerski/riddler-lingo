@@ -10,7 +10,9 @@ declare global {
 		}
 
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			user: import('$lib/types').SessionUser | null;
+		}
 		// interface PageData {}
 		// interface PageState {}
 	}
