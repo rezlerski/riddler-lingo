@@ -1,0 +1,45 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "riddler-lingo",
+	"compatibility_date": "2026-06-14",
+	"compatibility_flags": [
+		"nodejs_als"
+	],
+	"main": ".svelte-kit/cloudflare/_worker.js",
+	"assets": {
+		"binding": "ASSETS",
+		"directory": ".svelte-kit/cloudflare"
+	},
+	"workers_dev": true,
+	"preview_urls": true,
+
+	// D1 (SQLite). database_id ist nur fuer Remote-Deploys noetig:
+	// nach `wrangler d1 create riddler-lingo` die echte ID hier eintragen.
+	// Lokale Migrationen/Dev nutzen einen automatisch angelegten SQLite-Store.
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "riddler-lingo",
+			"database_id": "00000000-0000-0000-0000-000000000000",
+			"migrations_dir": "migrations"
+		}
+	],
+
+	// Workers AI (KI-Eingabepruefung + Text-to-Speech)
+	"ai": {
+		"binding": "AI"
+	},
+
+	// R2 (optionale Wort-Bilder und Aussprache-MP3s)
+	"r2_buckets": [
+		{
+			"binding": "BUCKET",
+			"bucket_name": "riddler-lingo-images"
+		}
+	],
+
+	// Custom-Domain des oeffentlichen R2-Buckets (fuer Bild-/Audio-URLs)
+	"vars": {
+		"PUBLIC_IMAGE_BASE_URL": "https://img.example.com/"
+	}
+}
