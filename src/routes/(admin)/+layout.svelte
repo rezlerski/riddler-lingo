@@ -12,6 +12,7 @@
 				<a href="/decks" class="font-semibold">🦉 Admin</a>
 				<a href="/decks" class="text-sm text-gray-600 hover:text-gray-900">Wortgruppen</a>
 				<a href="/learners" class="text-sm text-gray-600 hover:text-gray-900">Kinder</a>
+				<a href="/stats" class="text-sm text-gray-600 hover:text-gray-900">Erfolge</a>
 			</nav>
 			<div class="flex items-center gap-3 text-sm">
 				<span class="text-gray-500">{data.user.name}</span>
