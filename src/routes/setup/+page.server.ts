@@ -40,6 +40,6 @@ export const actions: Actions = {
 			maxAge: SESSION_TTL_SECONDS
 		});
 
-		throw redirect(303, '/learners');
+		throw redirect(303, '/decks');
 	}
 };

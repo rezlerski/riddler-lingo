@@ -13,7 +13,7 @@ import {
 } from '$lib/server/auth';
 
 export const load: PageServerLoad = async ({ locals, platform }) => {
-	if (locals.user) throw redirect(303, locals.user.role === 'admin' ? '/learners' : '/start');
+	if (locals.user) throw redirect(303, locals.user.role === 'admin' ? '/decks' : '/start');
 
 	const env = platform?.env as Env | undefined;
 	if (!env?.DB) return { children: [] };
@@ -72,6 +72,6 @@ export const actions: Actions = {
 		}
 
 		setSessionCookie(cookies, await createSession(env.DB, user.id));
-		throw redirect(303, '/learners');
+		throw redirect(303, '/decks');
 	}
 };

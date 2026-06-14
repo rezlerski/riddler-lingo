@@ -5,7 +5,7 @@ import { adminExists } from '$lib/server/auth';
 /** Einstieg: leitet je nach Anmeldestatus weiter. */
 export const load: PageServerLoad = async ({ locals, platform }) => {
 	if (locals.user) {
-		throw redirect(303, locals.user.role === 'admin' ? '/learners' : '/start');
+		throw redirect(303, locals.user.role === 'admin' ? '/decks' : '/start');
 	}
 
 	const env = platform?.env as Env | undefined;

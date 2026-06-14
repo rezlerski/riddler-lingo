@@ -1,4 +1,13 @@
+import { error } from '@sveltejs/kit';
 import type { Role, SessionUser } from '$lib/types';
+
+/** Stellt sicher, dass ein Admin angemeldet ist (für API-Endpunkte ausserhalb der (admin)-Gruppe). */
+export function requireAdmin(locals: App.Locals): SessionUser {
+	if (!locals.user || locals.user.role !== 'admin') {
+		throw error(403, 'Nur für Admins.');
+	}
+	return locals.user;
+}
 
 /** Name des Session-Cookies. */
 export const SESSION_COOKIE = 'rl_session';
