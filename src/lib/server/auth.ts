@@ -9,6 +9,14 @@ export function requireAdmin(locals: App.Locals): SessionUser {
 	return locals.user;
 }
 
+/** Stellt sicher, dass irgendein Nutzer angemeldet ist. */
+export function requireUser(locals: App.Locals): SessionUser {
+	if (!locals.user) {
+		throw error(401, 'Bitte anmelden.');
+	}
+	return locals.user;
+}
+
 /** Name des Session-Cookies. */
 export const SESSION_COOKIE = 'rl_session';
 /** Gültigkeitsdauer einer Session in Sekunden (30 Tage). */

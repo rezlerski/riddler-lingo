@@ -20,7 +20,7 @@
 		{
 			"binding": "DB",
 			"database_name": "riddler-lingo",
-			"database_id": "00000000-0000-0000-0000-000000000000",
+			"database_id": "0f5ace85-53e9-4830-b4f9-8d44d9d363c2",
 			"migrations_dir": "migrations"
 		}
 	],
@@ -34,7 +34,7 @@
 	"r2_buckets": [
 		{
 			"binding": "BUCKET",
-			"bucket_name": "riddler-lingo-images"
+			"bucket_name": "riddler-lingo"
 		}
 	],
 

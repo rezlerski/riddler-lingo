@@ -35,3 +35,25 @@ export interface WordVerdict {
 	issues: string[];
 	suggestion: { term: string; translation: string } | null;
 }
+
+/** Eine Übungsaufgabe für die aktuelle Stufe eines Wortes (ohne durchgesickerte Lösung). */
+export interface LearnTask {
+	done?: false;
+	wordId: number;
+	stage: number; // 1..4
+	imageKey: string | null;
+	audioKey: string | null;
+	term?: string; // Stufe 1 (Lernkarte)
+	translation?: string; // Stufe 1/2/3/4 (Frage bzw. Hinweis)
+	options?: string[]; // Stufe 2 (3 Auswahlmöglichkeiten)
+	masked?: string; // Stufe 3 (Wort mit Lücken)
+}
+
+export type NextResult = LearnTask | { done: true };
+
+export interface AnswerResult {
+	correct: boolean;
+	expected: string;
+	stage: number; // neue/aktuelle Stufe nach dem Versuch
+	learned: boolean;
+}
