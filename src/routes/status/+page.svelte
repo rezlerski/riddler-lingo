@@ -17,7 +17,7 @@
 
 <main class="mx-auto max-w-2xl space-y-8 p-6">
 	<header class="space-y-1">
-		<h1 class="text-3xl font-bold tracking-tight">🦉 Riddler-Lingo</h1>
+		<h1 class="flex items-center gap-2 text-3xl font-bold tracking-tight"><img src="/logo.png" alt="" class="h-8 w-8" /> Riddler-Lingo</h1>
 		<p class="text-gray-500">System-Status</p>
 	</header>
 

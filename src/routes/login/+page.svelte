@@ -15,7 +15,8 @@
 
 <main class="mx-auto max-w-2xl space-y-8 p-6">
 	<header class="space-y-1 text-center">
-		<h1 class="text-3xl font-bold">🦉 Riddler-Lingo</h1>
+		<img src="/logo.png" alt="Riddler-Lingo" class="mx-auto h-20 w-20" />
+		<h1 class="text-3xl font-bold">Riddler-Lingo</h1>
 		<p class="text-gray-500">Wer bist du?</p>
 	</header>
 
@@ -62,7 +63,7 @@
 				</label>
 				<button
 					disabled={!selected}
-					class="w-full rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+					class="w-full rounded-full bg-indigo-600 px-4 py-3 text-lg font-semibold text-white shadow-md transition hover:bg-indigo-700 active:scale-95 disabled:opacity-50"
 				>
 					Los geht's
 				</button>

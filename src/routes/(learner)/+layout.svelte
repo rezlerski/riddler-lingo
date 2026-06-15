@@ -5,9 +5,9 @@
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 </script>
 
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-linear-to-b from-indigo-50 via-white to-white">
 	<header class="border-b bg-white">
-		<div class="mx-auto flex max-w-3xl items-center justify-between p-4">
+		<div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 p-4">
 			<a href="/start" class="font-semibold">{data.user.avatar ?? '🙂'} {data.user.name}</a>
 			<div class="flex items-center gap-3">
 				<a href="/progress" class="text-sm text-gray-600 hover:text-gray-900">Erfolge</a>

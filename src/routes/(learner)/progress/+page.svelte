@@ -5,12 +5,28 @@
 	const s = $derived(data.summary);
 	const accuracy = $derived(s.attempts > 0 ? Math.round((s.correct / s.attempts) * 100) : null);
 
-	const badges = $derived([
+	const decksWithWords = $derived(s.perDeck.filter((d) => d.total > 0));
+	const completedCount = $derived(decksWithWords.filter((d) => d.learned === d.total).length);
+	const allDecksDone = $derived(decksWithWords.length > 0 && completedCount === decksWithWords.length);
+
+	// `count` = wie oft das Abzeichen verdient wurde (zeigt ein "×N"-Bubble ab 2).
+	type Badge = { icon: string; label: string; earned: boolean; count?: number };
+	const badges: Badge[] = $derived([
 		{ icon: '🌱', label: 'Erste Schritte', earned: s.learned >= 1 },
 		{ icon: '⭐', label: '5 gelernt', earned: s.learned >= 5 },
 		{ icon: '🏆', label: '10 gelernt', earned: s.learned >= 10 },
+		{ icon: '📚', label: '25 gelernt', earned: s.learned >= 25 },
+		{ icon: '🦉', label: '50 gelernt', earned: s.learned >= 50 },
+		{ icon: '👑', label: '100 gelernt', earned: s.learned >= 100 },
+		{ icon: '✅', label: 'Gruppe fertig', earned: completedCount >= 1, count: completedCount },
+		{ icon: '🌟', label: 'Alle Gruppen', earned: allDecksDone },
 		{ icon: '🔥', label: 'Serie 5', earned: s.longestStreak >= 5 },
-		{ icon: '🎯', label: 'Treffsicher', earned: s.attempts >= 10 && accuracy !== null && accuracy >= 80 }
+		{ icon: '⚡', label: 'Serie 10', earned: s.longestStreak >= 10 },
+		{ icon: '🚀', label: 'Serie 20', earned: s.longestStreak >= 20 },
+		{ icon: '🎯', label: 'Treffsicher', earned: s.attempts >= 10 && accuracy !== null && accuracy >= 80 },
+		{ icon: '🎓', label: 'Fehlerfrei', earned: s.flawless >= 1, count: s.flawless },
+		{ icon: '💪', label: '100 Antworten', earned: s.attempts >= 100 },
+		{ icon: '🏋️', label: '500 Antworten', earned: s.attempts >= 500 }
 	]);
 </script>
 
@@ -45,7 +61,10 @@
 		<h2 class="mb-3 text-lg font-semibold">Abzeichen</h2>
 		<div class="flex flex-wrap gap-3">
 			{#each badges as b}
-				<div class="flex w-24 flex-col items-center gap-1 rounded-lg border p-3 text-center {b.earned ? 'border-amber-300 bg-amber-50' : 'border-gray-200 opacity-40'}">
+				<div class="relative flex w-24 flex-col items-center gap-1 rounded-lg border p-3 text-center {b.earned ? 'border-amber-300 bg-amber-50' : 'border-gray-200 opacity-40'}">
+					{#if b.earned && b.count && b.count >= 2}
+						<span class="absolute -right-1.5 -top-1.5 rounded-full bg-amber-500 px-1.5 py-0.5 text-[11px] font-bold text-white shadow-sm">×{b.count}</span>
+					{/if}
 					<span class="text-3xl">{b.icon}</span>
 					<span class="text-xs font-medium">{b.label}</span>
 				</div>

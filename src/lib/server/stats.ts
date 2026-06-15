@@ -66,6 +66,7 @@ export interface ChildSummary {
 	correct: number;
 	currentStreak: number;
 	longestStreak: number;
+	flawless: number; // Anzahl Wörter, die ohne einen einzigen Fehlversuch gelernt wurden
 	perDeck: { name: string; total: number; learned: number }[];
 }
 
@@ -106,6 +107,18 @@ export async function childSummary(db: D1Database, userId: number): Promise<Chil
 		.bind(userId)
 		.all<{ name: string; total: number; learned: number }>();
 
+	const fl = await db
+		.prepare(
+			`SELECT COUNT(*) AS c FROM progress p
+			 WHERE p.user_id = ? AND p.learned = 1
+			   AND NOT EXISTS (
+			     SELECT 1 FROM attempts a
+			      WHERE a.user_id = p.user_id AND a.word_id = p.word_id AND a.is_correct = 0
+			   )`
+		)
+		.bind(userId)
+		.first<{ c: number }>();
+
 	return {
 		totalWords: tw?.c ?? 0,
 		learned: lr?.c ?? 0,
@@ -113,6 +126,7 @@ export async function childSummary(db: D1Database, userId: number): Promise<Chil
 		correct: at?.ok ?? 0,
 		currentStreak: current,
 		longestStreak: longest,
+		flawless: fl?.c ?? 0,
 		perDeck: pd.results
 	};
 }

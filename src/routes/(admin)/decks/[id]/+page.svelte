@@ -18,6 +18,14 @@
 
 	let editId = $state<number | null>(null);
 	let busy = $state<Record<string, boolean>>({});
+	let search = $state('');
+
+	const filteredWords = $derived(
+		data.words.filter((w) => {
+			const q = search.trim().toLowerCase();
+			return !q || w.term.toLowerCase().includes(q) || w.translation.toLowerCase().includes(q);
+		})
+	);
 
 	async function checkWord() {
 		if (!term.trim() || !translation.trim()) return;
@@ -87,14 +95,14 @@
 	</div>
 
 	{#if form?.success}
-		<p class="rounded bg-green-50 px-3 py-2 text-sm text-green-700">{form.success}</p>
+		<p class="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">{form.success}</p>
 	{/if}
 
 	<!-- Neues Wort -->
 	<section class="rounded-xl border border-gray-200 bg-white p-5">
 		<h2 class="mb-3 text-lg font-semibold">Neues Wort</h2>
 		{#if form?.error && form.action === 'createWord'}
-			<p class="mb-3 rounded bg-red-50 px-3 py-2 text-sm text-red-700">{form.error}</p>
+			<p class="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{form.error}</p>
 		{/if}
 		<form
 			method="POST"
@@ -115,19 +123,19 @@
 			<div class="grid gap-3 sm:grid-cols-2">
 				<label class="block space-y-1">
 					<span class="text-sm font-medium">Wort ({data.deck.language_to})</span>
-					<input name="term" bind:value={term} required class="w-full rounded border border-gray-300 px-3 py-2" />
+					<input name="term" bind:value={term} required class="w-full rounded-lg border border-gray-300 px-3 py-2" />
 				</label>
 				<label class="block space-y-1">
 					<span class="text-sm font-medium">Übersetzung ({data.deck.language_from})</span>
-					<input name="translation" bind:value={translation} required class="w-full rounded border border-gray-300 px-3 py-2" />
+					<input name="translation" bind:value={translation} required class="w-full rounded-lg border border-gray-300 px-3 py-2" />
 				</label>
 				<label class="block space-y-1">
 					<span class="text-sm font-medium">Eselsbrücke (optional)</span>
-					<input name="hint" bind:value={hint} class="w-full rounded border border-gray-300 px-3 py-2" />
+					<input name="hint" bind:value={hint} class="w-full rounded-lg border border-gray-300 px-3 py-2" />
 				</label>
 				<label class="block space-y-1">
 					<span class="text-sm font-medium">Beispielsatz (optional)</span>
-					<input name="example" bind:value={example} class="w-full rounded border border-gray-300 px-3 py-2" />
+					<input name="example" bind:value={example} class="w-full rounded-lg border border-gray-300 px-3 py-2" />
 				</label>
 			</div>
 
@@ -145,7 +153,7 @@
 					{#if verdict.suggestion}
 						<p class="mt-1">
 							Vorschlag: <strong>{verdict.suggestion.term}</strong> = {verdict.suggestion.translation}
-							<button type="button" onclick={applySuggestion} class="ml-2 rounded border px-2 py-0.5 text-xs hover:bg-white">übernehmen</button>
+							<button type="button" onclick={applySuggestion} class="ml-2 rounded-lg border px-2 py-0.5 text-xs hover:bg-white">übernehmen</button>
 						</p>
 					{/if}
 				</div>
@@ -162,62 +170,86 @@
 
 	<!-- Wörter-Liste -->
 	<section class="rounded-xl border border-gray-200 bg-white p-5">
-		<h2 class="mb-3 text-lg font-semibold">Wörter ({data.words.length})</h2>
+		<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+			<h2 class="text-lg font-semibold">Wörter ({data.words.length})</h2>
+			{#if data.words.length > 0}
+				<input
+					bind:value={search}
+					placeholder="🔎 suchen …"
+					class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm"
+				/>
+			{/if}
+		</div>
+
 		{#if data.words.length === 0}
 			<p class="text-gray-500">Noch keine Wörter in dieser Gruppe.</p>
+		{:else if filteredWords.length === 0}
+			<p class="text-gray-500">Keine Treffer für „{search}".</p>
 		{:else}
 			<ul class="divide-y">
-				{#each data.words as word}
-					<li class="space-y-2 py-4">
-						<div class="flex flex-wrap items-start justify-between gap-3">
-							<div class="flex items-start gap-3">
+				{#each filteredWords as word (word.id)}
+					<li class="py-3">
+						<!-- Kompakte Zeile -->
+						<div class="flex items-center justify-between gap-3">
+							<div class="flex min-w-0 items-center gap-3">
 								{#if word.image_key}
-									<img src={data.imageBaseUrl + word.image_key} alt={word.term} class="h-14 w-14 rounded object-cover" />
+									<img src={data.imageBaseUrl + word.image_key} alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover" />
 								{:else}
-									<div class="flex h-14 w-14 items-center justify-center rounded bg-gray-100 text-xs text-gray-400">kein Bild</div>
+									<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-base text-gray-400">🖼️</div>
 								{/if}
-								<div>
-									<div class="font-medium">{word.term} <span class="text-gray-400">→ {word.translation}</span></div>
-									{#if word.hint}<div class="text-xs text-gray-500">💡 {word.hint}</div>{/if}
-									{#if word.example}<div class="text-xs text-gray-500">„{word.example}"</div>{/if}
-									{#if word.audio_key}
-										<audio controls src={data.imageBaseUrl + word.audio_key} class="mt-1 h-8"></audio>
-									{/if}
+								<div class="min-w-0">
+									<div class="truncate font-medium">{word.term} <span class="text-gray-400">→ {word.translation}</span></div>
+									<div class="flex gap-2 text-xs text-gray-400">
+										{#if word.image_key}<span title="Bild">🖼️</span>{/if}
+										{#if word.audio_key}<span title="Aussprache">🔊</span>{/if}
+										{#if word.hint}<span title="Eselsbrücke">💡</span>{/if}
+									</div>
 								</div>
 							</div>
-							<div class="flex flex-wrap items-center gap-2">
-								<label class="cursor-pointer rounded border px-2 py-1 text-sm hover:bg-gray-50">
-									{busy[`img-${word.id}`] ? '…' : 'Bild'}
-									<input type="file" accept="image/*" class="hidden" onchange={(e) => uploadImage(word.id, e.currentTarget)} />
-								</label>
-								{#if word.image_key}
-									<button type="button" onclick={() => api(`/api/admin/words/${word.id}/image`, 'DELETE')} class="rounded border px-2 py-1 text-sm hover:bg-gray-50">Bild ✕</button>
-								{/if}
-								<button type="button" onclick={() => genAudio(word.id)} disabled={busy[`aud-${word.id}`]} class="rounded border px-2 py-1 text-sm hover:bg-gray-50 disabled:opacity-50">
-									{busy[`aud-${word.id}`] ? '…' : word.audio_key ? '🔊 neu' : '🔊 Audio'}
-								</button>
-								{#if word.audio_key}
-									<button type="button" onclick={() => api(`/api/admin/words/${word.id}/audio`, 'DELETE')} class="rounded border px-2 py-1 text-sm hover:bg-gray-50">Audio ✕</button>
-								{/if}
-								<button type="button" onclick={() => (editId = editId === word.id ? null : word.id)} class="rounded border px-2 py-1 text-sm hover:bg-gray-50">Bearbeiten</button>
-								<form method="POST" action="?/deleteWord" use:enhance onsubmit={(e) => { if (!confirm(`„${word.term}" löschen?`)) e.preventDefault(); }}>
-									<input type="hidden" name="id" value={word.id} />
-									<button class="rounded border border-red-200 px-2 py-1 text-sm text-red-600 hover:bg-red-50">Löschen</button>
-								</form>
-							</div>
+							<button type="button" onclick={() => (editId = editId === word.id ? null : word.id)} class="shrink-0 rounded-lg border px-3 py-1.5 text-sm hover:bg-gray-50">
+								{editId === word.id ? 'Schließen' : 'Bearbeiten'}
+							</button>
 						</div>
 
+						<!-- Aufgeklappt: Bearbeiten + Medien + Löschen -->
 						{#if editId === word.id}
-							<form method="POST" action="?/updateWord" use:enhance={() => async ({ update }) => { await update({ reset: false }); editId = null; }} class="grid gap-2 rounded bg-gray-50 p-3 sm:grid-cols-2">
-								<input type="hidden" name="id" value={word.id} />
-								<input name="term" required value={word.term} class="rounded border border-gray-300 px-3 py-2" />
-								<input name="translation" required value={word.translation} class="rounded border border-gray-300 px-3 py-2" />
-								<input name="hint" value={word.hint ?? ''} placeholder="Eselsbrücke" class="rounded border border-gray-300 px-3 py-2" />
-								<input name="example" value={word.example ?? ''} placeholder="Beispielsatz" class="rounded border border-gray-300 px-3 py-2" />
-								<div class="sm:col-span-2">
-									<button class="rounded-lg bg-gray-800 px-3 py-2 text-sm font-medium text-white hover:bg-gray-900">Speichern</button>
+							<div class="mt-3 space-y-3 rounded-lg bg-gray-50 p-3">
+								<form method="POST" action="?/updateWord" use:enhance={() => async ({ update }) => { await update({ reset: false }); editId = null; }} class="grid gap-2 sm:grid-cols-2">
+									<input type="hidden" name="id" value={word.id} />
+									<input name="term" required value={word.term} class="rounded-lg border border-gray-300 px-3 py-2" />
+									<input name="translation" required value={word.translation} class="rounded-lg border border-gray-300 px-3 py-2" />
+									<input name="hint" value={word.hint ?? ''} placeholder="Eselsbrücke" class="rounded-lg border border-gray-300 px-3 py-2" />
+									<input name="example" value={word.example ?? ''} placeholder="Beispielsatz" class="rounded-lg border border-gray-300 px-3 py-2" />
+									<div class="sm:col-span-2">
+										<button class="rounded-lg bg-gray-800 px-3 py-2 text-sm font-medium text-white hover:bg-gray-900">Speichern</button>
+									</div>
+								</form>
+
+								<!-- Bild & Aussprache -->
+								<div class="flex flex-wrap items-center gap-2">
+									<label class="cursor-pointer rounded-lg border px-2 py-1 text-sm hover:bg-gray-50">
+										{busy[`img-${word.id}`] ? '…' : word.image_key ? 'Bild ersetzen' : 'Bild hochladen'}
+										<input type="file" accept="image/*" class="hidden" onchange={(e) => uploadImage(word.id, e.currentTarget)} />
+									</label>
+									{#if word.image_key}
+										<button type="button" onclick={() => { if (confirm(`Bild von „${word.term}" wirklich löschen?`)) api(`/api/admin/words/${word.id}/image`, 'DELETE'); }} class="rounded-lg border px-2 py-1 text-sm hover:bg-gray-50">Bild entfernen</button>
+									{/if}
+									<button type="button" onclick={() => genAudio(word.id)} disabled={busy[`aud-${word.id}`]} class="rounded-lg border px-2 py-1 text-sm hover:bg-gray-50 disabled:opacity-50">
+										{busy[`aud-${word.id}`] ? '…' : word.audio_key ? '🔊 Aussprache neu' : '🔊 Aussprache erzeugen'}
+									</button>
+									{#if word.audio_key}
+										<button type="button" onclick={() => { if (confirm(`Aussprache von „${word.term}" wirklich löschen?`)) api(`/api/admin/words/${word.id}/audio`, 'DELETE'); }} class="rounded-lg border px-2 py-1 text-sm hover:bg-gray-50">Audio entfernen</button>
+									{/if}
 								</div>
-							</form>
+								{#if word.audio_key}
+									<audio controls src={data.imageBaseUrl + word.audio_key} class="h-8"></audio>
+								{/if}
+
+								<form method="POST" action="?/deleteWord" use:enhance onsubmit={(e) => { if (!confirm(`„${word.term}" löschen?`)) e.preventDefault(); }}>
+									<input type="hidden" name="id" value={word.id} />
+									<button class="rounded-lg border border-red-200 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50">Wort löschen</button>
+								</form>
+							</div>
 						{/if}
 					</li>
 				{/each}

@@ -47,6 +47,8 @@ export interface LearnTask {
 	translation?: string; // Stufe 1/2/3/4 (Frage bzw. Hinweis)
 	options?: string[]; // Stufe 2 (3 Auswahlmöglichkeiten)
 	masked?: string; // Stufe 3 (Wort mit Lücken)
+	letters?: string[]; // Stufe 3 (antippbare Buchstaben: fehlende + falsche, gemischt)
+	review?: boolean; // fällige Wiederholung eines bereits gelernten Wortes
 }
 
 export type NextResult = LearnTask | { done: true };
@@ -56,4 +58,5 @@ export interface AnswerResult {
 	expected: string;
 	stage: number; // neue/aktuelle Stufe nach dem Versuch
 	learned: boolean;
+	review?: boolean; // war eine Wiederholung
 }

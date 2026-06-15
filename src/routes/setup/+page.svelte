@@ -9,7 +9,8 @@
 
 <main class="mx-auto max-w-md space-y-6 p-6">
 	<header class="space-y-1">
-		<h1 class="text-2xl font-bold">🦉 Erste Einrichtung</h1>
+		<img src="/logo.png" alt="" class="mb-1 h-14 w-14" />
+		<h1 class="text-2xl font-bold">Erste Einrichtung</h1>
 		<p class="text-gray-500">Lege den Admin-Account an (das bist du).</p>
 	</header>
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { formatDate } from '$lib/format';
 	import type { PageData, ActionData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -15,14 +16,14 @@
 	<h1 class="text-2xl font-bold">Kinder verwalten</h1>
 
 	{#if form?.success}
-		<p class="rounded bg-green-50 px-3 py-2 text-sm text-green-700">{form.success}</p>
+		<p class="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">{form.success}</p>
 	{/if}
 
 	<!-- Neues Kind anlegen -->
 	<section class="rounded-xl border border-gray-200 bg-white p-5">
 		<h2 class="mb-3 text-lg font-semibold">Neues Kind</h2>
 		{#if form?.error && form.action === 'create'}
-			<p class="mb-3 rounded bg-red-50 px-3 py-2 text-sm text-red-700">{form.error}</p>
+			<p class="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{form.error}</p>
 		{/if}
 		<form method="POST" action="?/create" use:enhance class="space-y-4">
 			<div class="grid gap-4 sm:grid-cols-2">
@@ -31,7 +32,7 @@
 					<input
 						name="name"
 						required
-						class="w-full rounded border border-gray-300 px-3 py-2"
+						class="w-full rounded-lg border border-gray-300 px-3 py-2"
 						placeholder="z. B. Mia"
 					/>
 				</label>
@@ -43,7 +44,7 @@
 						pattern="[0-9]*"
 						maxlength="4"
 						required
-						class="w-full rounded border border-gray-300 px-3 py-2 tracking-widest"
+						class="w-full rounded-lg border border-gray-300 px-3 py-2 tracking-widest"
 						placeholder="1234"
 					/>
 				</label>
@@ -83,14 +84,14 @@
 							<span class="text-3xl">{child.avatar ?? '🙂'}</span>
 							<div>
 								<div class="font-medium">{child.name}</div>
-								<div class="text-xs text-gray-400">angelegt {child.created_at}</div>
+								<div class="text-xs text-gray-400">angelegt {formatDate(child.created_at)}</div>
 							</div>
 						</div>
 						<div class="flex items-center gap-2">
 							<button
 								type="button"
 								onclick={() => (resetFor = resetFor === child.id ? null : child.id)}
-								class="rounded border px-2 py-1 text-sm hover:bg-gray-50"
+								class="rounded-lg border px-2 py-1 text-sm hover:bg-gray-50"
 							>
 								PIN ändern
 							</button>
@@ -104,7 +105,7 @@
 								}}
 							>
 								<input type="hidden" name="id" value={child.id} />
-								<button class="rounded border border-red-200 px-2 py-1 text-sm text-red-600 hover:bg-red-50">
+								<button class="rounded-lg border border-red-200 px-2 py-1 text-sm text-red-600 hover:bg-red-50">
 									Löschen
 								</button>
 							</form>
@@ -120,7 +121,7 @@
 										resetFor = null;
 									};
 								}}
-								class="flex w-full items-end gap-2 rounded bg-gray-50 p-3"
+								class="flex w-full items-end gap-2 rounded-lg bg-gray-50 p-3"
 							>
 								<input type="hidden" name="id" value={child.id} />
 								<label class="space-y-1">
@@ -131,7 +132,7 @@
 										pattern="[0-9]*"
 										maxlength="4"
 										required
-										class="w-28 rounded border border-gray-300 px-3 py-2 tracking-widest"
+										class="w-28 rounded-lg border border-gray-300 px-3 py-2 tracking-widest"
 										placeholder="0000"
 									/>
 								</label>

@@ -19,13 +19,13 @@
 		<div class="grid gap-4 sm:grid-cols-2">
 			{#each data.decks as deck}
 				{@const pct = deck.total ? Math.round((deck.learned / deck.total) * 100) : 0}
-				<div class="rounded-xl border border-gray-200 bg-white p-5">
+				<div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md">
 					<div class="flex items-baseline justify-between">
-						<h2 class="text-lg font-semibold">{deck.name}</h2>
+						<h2 class="text-lg font-bold">{deck.name}</h2>
 						<span class="text-xs text-gray-400">{deck.language_from} → {deck.language_to}</span>
 					</div>
-					<div class="mt-3 h-2 overflow-hidden rounded bg-gray-100">
-						<div class="h-full bg-green-500" style="width: {pct}%"></div>
+					<div class="mt-3 h-2.5 overflow-hidden rounded-full bg-gray-100">
+						<div class="h-full rounded-full bg-green-500 transition-all" style="width: {pct}%"></div>
 					</div>
 					<p class="mt-1 text-sm text-gray-500">{deck.learned} / {deck.total} gelernt</p>
 
@@ -33,11 +33,16 @@
 						<p class="mt-3 text-sm text-amber-600">Noch keine Wörter.</p>
 					{:else if deck.learned === deck.total}
 						<p class="mt-3 text-sm font-medium text-green-600">🎉 Alles gelernt!</p>
-						<a href="/lernen/{deck.id}" class="mt-1 inline-block text-sm text-indigo-600 hover:underline">nochmal üben</a>
+						<a
+							href="/lernen/{deck.id}"
+							class="mt-2 inline-flex items-center gap-1.5 rounded-full border-2 border-indigo-300 px-6 py-2.5 font-semibold text-indigo-700 transition hover:border-indigo-400 hover:bg-indigo-50 active:scale-95"
+						>
+							🔁 Nochmal üben
+						</a>
 					{:else}
 						<a
 							href="/lernen/{deck.id}"
-							class="mt-3 inline-block rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700"
+							class="mt-4 inline-block rounded-full bg-indigo-600 px-6 py-2.5 font-semibold text-white shadow-md transition hover:bg-indigo-700 active:scale-95"
 						>
 							Üben →
 						</a>

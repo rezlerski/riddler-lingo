@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatDateTime } from '$lib/format';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -8,10 +9,6 @@
 			? Math.round((data.summary.correct / data.summary.attempts) * 100)
 			: null
 	);
-
-	function fmt(ts: string | null): string {
-		return ts ? ts.replace('T', ' ').slice(0, 16) : '—';
-	}
 </script>
 
 <svelte:head><title>Riddler-Lingo — Erfolge</title></svelte:head>
@@ -25,7 +22,7 @@
 		<form method="GET" class="flex flex-wrap items-end gap-3 rounded-xl border border-gray-200 bg-white p-4">
 			<label class="space-y-1">
 				<span class="text-sm font-medium">Kind</span>
-				<select name="childId" onchange={(e) => e.currentTarget.form?.requestSubmit()} class="block rounded border border-gray-300 px-3 py-2">
+				<select name="childId" onchange={(e) => e.currentTarget.form?.requestSubmit()} class="block rounded-lg border border-gray-300 px-3 py-2">
 					{#each data.children as c}
 						<option value={c.id} selected={c.id === data.childId}>{c.avatar ?? '🙂'} {c.name}</option>
 					{/each}
@@ -33,13 +30,13 @@
 			</label>
 			<label class="space-y-1">
 				<span class="text-sm font-medium">Wortgruppe</span>
-				<select name="deckId" onchange={(e) => e.currentTarget.form?.requestSubmit()} class="block rounded border border-gray-300 px-3 py-2">
+				<select name="deckId" onchange={(e) => e.currentTarget.form?.requestSubmit()} class="block rounded-lg border border-gray-300 px-3 py-2">
 					{#each data.decks as d}
 						<option value={d.id} selected={d.id === data.deckId}>{d.name}</option>
 					{/each}
 				</select>
 			</label>
-			<noscript><button class="rounded bg-gray-800 px-3 py-2 text-sm text-white">Anzeigen</button></noscript>
+			<noscript><button class="rounded-lg bg-gray-800 px-3 py-2 text-sm text-white">Anzeigen</button></noscript>
 		</form>
 
 		{#if data.summary}
@@ -82,12 +79,12 @@
 							</td>
 							<td class="px-4 py-2 whitespace-nowrap">
 								{#if r.learned}
-									<span class="rounded bg-green-100 px-2 py-0.5 text-xs text-green-700">⭐ gelernt</span>
+									<span class="rounded-lg bg-green-100 px-2 py-0.5 text-xs text-green-700">⭐ gelernt</span>
 								{:else}
 									<span class="text-gray-600">{r.stage}/4</span>
 								{/if}
 							</td>
-							<td class="px-4 py-2 whitespace-nowrap text-gray-500">{fmt(r.last_attempt_at)}</td>
+							<td class="px-4 py-2 whitespace-nowrap text-gray-500">{formatDateTime(r.last_attempt_at)}</td>
 							<td class="px-4 py-2 text-red-600">{r.last_mistake ?? '—'}</td>
 						</tr>
 					{/each}

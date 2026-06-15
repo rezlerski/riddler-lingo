@@ -34,12 +34,13 @@
 	"r2_buckets": [
 		{
 			"binding": "BUCKET",
-			"bucket_name": "riddler-lingo"
+			"bucket_name": "riddler-lingo",
+			"jurisdiction": "eu"
 		}
 	],
 
 	// Custom-Domain des oeffentlichen R2-Buckets (fuer Bild-/Audio-URLs)
 	"vars": {
-		"PUBLIC_IMAGE_BASE_URL": "https://img.example.com/"
+		"PUBLIC_IMAGE_BASE_URL": "https://riddler-lingo-static.rezler.dev/"
 	}
 }

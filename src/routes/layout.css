@@ -1,1 +1,8 @@
 @import 'tailwindcss';
+
+@keyframes rl-confetti {
+	to {
+		transform: translateY(110vh) rotate(720deg);
+		opacity: 0;
+	}
+}
